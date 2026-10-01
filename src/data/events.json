@@ -1,0 +1,28 @@
+[
+  {
+    "id": "event-1",
+    "name": "Raatladi",
+    "venue": "XYZ Party Plot, Ahmedabad",
+    "poster": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=1000",
+    "onlinePrice": 799,
+    "dates": [
+      {
+        "id": "date-1",
+        "date": "2026-10-11",
+        "price": 399
+      },
+      {
+        "id": "date-2",
+        "date": "2026-10-12",
+        "price": 449
+      },
+      {
+        "id": "date-3",
+        "date": "2026-10-13",
+        "price": 499
+      }
+    ],
+    "createdAt": "2026-10-01T10:00:00Z",
+    "updatedAt": "2026-10-01T09:36:05.071Z"
+  }
+]
