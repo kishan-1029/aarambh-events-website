@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Mirchi Rock 'N' Dhol",
+    "venue": "Aman Akash Party Plot",
+    "poster": "/uploads/1790885936258-media-desktop-mirchi-rock-n-dhol-0-2026-9-25-t-14-16-51.avif",
+    "onlinePrice": 249,
+    "dates": [
+      {
+        "id": "date-1790885856558",
+        "date": "2026-10-11",
+        "price": 199
+      },
+      {
+        "id": "date-1790886057519-0.21246771102982864",
+        "date": "2026-10-12",
+        "price": 179
+      }
+    ],
+    "id": "event-1790885969267",
+    "createdAt": "2026-10-01T20:19:29.267Z",
+    "updatedAt": "2026-10-01T20:22:00.744Z"
+  },
+  {
+    "name": "Hashtag Navratri",
+    "venue": "ANMOL FARM & PARTY PLOT",
+    "poster": "/uploads/1790886728223-01M2R6BM1BZXV1YN85GR5WHT5T.jpg",
+    "onlinePrice": 499,
+    "dates": [
+      {
+        "id": "date-1790886284344",
+        "date": "2026-10-15",
+        "price": 56
+      }
+    ],
+    "id": "event-1790886778289",
+    "createdAt": "2026-10-01T20:32:58.290Z",
+    "updatedAt": "2026-10-01T20:32:58.290Z"
+  },
+  {
+    "name": "VRINDAVAN NAGARI",
+    "venue": "SHUBH FARM, Sarkhej",
+    "poster": "/uploads/1790886933006-01M0FPQ1HC47CB1NK8XBQN0MWN.jpg",
+    "onlinePrice": 350,
+    "dates": [
+      {
+        "id": "date-1790886797554",
+        "date": "2026-10-11",
+        "price": 1
+      }
+    ],
+    "id": "event-1790886960550",
+    "createdAt": "2026-10-01T20:36:00.550Z",
+    "updatedAt": "2026-10-01T20:36:00.550Z"
+  },
+  {
+    "name": "Fadiyu",
+    "venue": "Patel's Cricket Ground: Ahmedabad",
+    "poster": "/uploads/1790887152148-media-desktop-fadiyu-season-3-0-2026-9-23-t-13-40-5.avif",
+    "onlinePrice": 499,
+    "dates": [
+      {
+        "id": "date-1790886963921",
+        "date": "2026-10-11",
+        "price": 1
+      }
+    ],
+    "id": "event-1790887172269",
+    "createdAt": "2026-10-01T20:39:32.269Z",
+    "updatedAt": "2026-10-01T20:39:32.269Z"
+  },
+  {
+    "name": "Shakti Sandhya",
+    "venue": "Venue to be announced",
+    "poster": "/uploads/1790887389946-media-desktop-shakti-sandhyaa-season-4-0-2026-9-24-t-20-0-22.avif",
+    "onlinePrice": 299,
+    "dates": [
+      {
+        "id": "date-1790887174749",
+        "date": "2026-10-11",
+        "price": 1
+      }
+    ],
+    "id": "event-1790887407446",
+    "createdAt": "2026-10-01T20:43:27.446Z",
+    "updatedAt": "2026-10-01T20:43:27.446Z"
+  }
+]

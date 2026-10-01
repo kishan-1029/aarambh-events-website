@@ -4,9 +4,17 @@ import fs from 'fs/promises'
 import path from 'path'
 
 export type EventDate = {
-  id: string
+  id?: string
   date: string
-  price: number
+  purchasingPrice?: string | number
+  commission?: string | number
+  price: number | string
+}
+
+export type EventCategory = {
+  id: string
+  name: string
+  dates: EventDate[]
 }
 
 export type Event = {
@@ -15,7 +23,9 @@ export type Event = {
   venue: string
   poster: string
   onlinePrice: number
-  dates: EventDate[]
+  categoryCount?: number
+  categories?: EventCategory[]
+  dates?: EventDate[]
   createdAt: string
   updatedAt: string
 }
@@ -46,8 +56,20 @@ export async function addEvent(eventData: Omit<Event, 'id' | 'createdAt' | 'upda
     updatedAt: new Date().toISOString()
   }
   
-  // ensure date ids
-  newEvent.dates = newEvent.dates.map(d => ({ ...d, id: d.id || `date-${Date.now()}-${Math.random()}` }))
+  if (newEvent.categoryCount && newEvent.categoryCount > 1) {
+    delete newEvent.dates
+    if (newEvent.categories) {
+      newEvent.categories = newEvent.categories.map(c => ({
+        ...c,
+        dates: c.dates.map(d => ({ ...d }))
+      }))
+    }
+  } else {
+    delete newEvent.categories
+    if (newEvent.dates) {
+      newEvent.dates = newEvent.dates.map(d => ({ ...d }))
+    }
+  }
   
   events.push(newEvent)
   await fs.writeFile(dataPath, JSON.stringify(events, null, 2))
@@ -65,7 +87,20 @@ export async function updateEvent(id: string, eventData: Omit<Event, 'id' | 'cre
     updatedAt: new Date().toISOString()
   }
   
-  updatedEvent.dates = updatedEvent.dates.map(d => ({ ...d, id: d.id || `date-${Date.now()}-${Math.random()}` }))
+  if (updatedEvent.categoryCount && updatedEvent.categoryCount > 1) {
+    delete updatedEvent.dates
+    if (updatedEvent.categories) {
+      updatedEvent.categories = updatedEvent.categories.map(c => ({
+        ...c,
+        dates: c.dates.map(d => ({ ...d }))
+      }))
+    }
+  } else {
+    delete updatedEvent.categories
+    if (updatedEvent.dates) {
+      updatedEvent.dates = updatedEvent.dates.map(d => ({ ...d }))
+    }
+  }
   
   events[index] = updatedEvent
   await fs.writeFile(dataPath, JSON.stringify(events, null, 2))

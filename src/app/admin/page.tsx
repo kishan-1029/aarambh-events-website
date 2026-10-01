@@ -3,30 +3,34 @@
 import { useState, useEffect } from 'react'
 import { Event, getEvents, deleteEvent } from '@/actions/eventActions'
 import EventForm from './EventForm'
+import AdminGate from '@/components/AdminGate'
 
-export default function AdminDashboard() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [password, setPassword] = useState('')
+function AdminDashboardContent() {
   const [events, setEvents] = useState<Event[]>([])
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
   const [isAddingNew, setIsAddingNew] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (password === 'admin123') {
-      setIsAuthenticated(true)
-      loadEvents()
-    } else {
-      alert('Invalid password (use admin123)')
-    }
-  }
 
   const loadEvents = async () => {
     setIsLoading(true)
     const data = await getEvents()
     setEvents(data)
     setIsLoading(false)
+  }
+
+  useEffect(() => {
+    loadEvents()
+  }, [])
+
+  const handleLogout = () => {
+    try {
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('aarambh_admin_authenticated')
+        window.location.reload()
+      }
+    } catch {
+      // ignore
+    }
   }
 
   const handleDelete = async (id: string) => {
@@ -36,30 +40,9 @@ export default function AdminDashboard() {
     }
   }
 
-  if (!isAuthenticated) {
-    return (
-      <div className="container section" style={{ maxWidth: '400px' }}>
-        <div className="card" style={{ padding: 'var(--spacing-xl)', textAlign: 'center' }}>
-          <h1 style={{ marginBottom: 'var(--spacing-lg)' }}>Admin Login</h1>
-          <form onSubmit={handleLogin}>
-            <input 
-              type="password" 
-              className="form-input mb-md" 
-              placeholder="Enter Password" 
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-            />
-            <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Login</button>
-          </form>
-        </div>
-      </div>
-    )
-  }
-
   if (isAddingNew || editingEvent) {
     return (
-      <div className="container section">
+      <div className="admin-page">
         <button 
           onClick={() => { setIsAddingNew(false); setEditingEvent(null); }} 
           className="btn btn-outline mb-md"
@@ -75,35 +58,60 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="container section">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-xl)' }}>
-        <h1>Admin Dashboard</h1>
-        <button onClick={() => setIsAddingNew(true)} className="btn btn-primary">
-          + Add New Event
-        </button>
+    <div className="admin-page">
+      <div className="admin-top-bar">
+        <h1 className="admin-heading">Admin Dashboard</h1>
+        <div className="admin-actions-group">
+          <button onClick={() => setIsAddingNew(true)} className="btn btn-primary admin-btn-add">
+            + Add New Event
+          </button>
+          <button onClick={handleLogout} className="btn admin-btn-logout">
+            Logout
+          </button>
+        </div>
       </div>
 
       {isLoading ? (
-        <p>Loading events...</p>
+        <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px 0' }}>Loading events...</p>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3">
+        <div className="admin-events-list">
           {events.map(event => (
-            <div key={event.id} className="card" style={{ padding: 'var(--spacing-lg)' }}>
-              <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                <img src={event.poster} alt={event.name} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px' }} />
-                <div>
-                  <h3 style={{ fontSize: '1.125rem' }}>{event.name}</h3>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{event.dates.length} Dates</p>
+            <div key={event.id} className="admin-event-card">
+              <div className="admin-event-top">
+                <img 
+                  src={event.poster} 
+                  alt={event.name} 
+                  className="admin-event-poster"
+                />
+                <div className="admin-event-details">
+                  <h3 className="admin-event-name">{event.name}</h3>
+                  <p className="admin-event-dates-count">
+                    {(event.categoryCount && event.categoryCount > 1 && event.categories && event.categories.length > 0)
+                      ? `${event.categories.length} Categories (${event.categories[0].dates.length} Dates)`
+                      : `${event.dates?.length || 0} Dates`}
+                  </p>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button onClick={() => setEditingEvent(event)} className="btn btn-outline" style={{ flex: 1 }}>Edit</button>
-                <button onClick={() => handleDelete(event.id)} className="btn" style={{ flex: 1, backgroundColor: '#fee2e2', color: '#b91c1c' }}>Delete</button>
+              <div className="admin-event-actions">
+                <button onClick={() => setEditingEvent(event)} className="admin-btn-edit">
+                  Edit
+                </button>
+                <button onClick={() => handleDelete(event.id)} className="admin-btn-delete">
+                  Delete
+                </button>
               </div>
             </div>
           ))}
         </div>
       )}
     </div>
+  )
+}
+
+export default function AdminPage() {
+  return (
+    <AdminGate>
+      <AdminDashboardContent />
+    </AdminGate>
   )
 }

@@ -2,40 +2,58 @@ import Link from 'next/link'
 import { Event } from '@/actions/eventActions'
 
 export default function EventCard({ event }: { event: Event }) {
-  // calculate lowest price
-  const lowestPrice = Math.min(...event.dates.map(d => d.price))
-  
+  let lowestPrice = event.onlinePrice
+  if (event.categoryCount && event.categoryCount > 1 && event.categories && event.categories.length > 0) {
+    const allPrices = event.categories.flatMap(c => c.dates.map(d => Number(d.price))).filter(p => !isNaN(p) && p > 0)
+    if (allPrices.length > 0) {
+      lowestPrice = Math.min(...allPrices)
+    }
+  } else if (event.dates && event.dates.length > 0) {
+    const prices = event.dates.map(d => Number(d.price)).filter(p => !isNaN(p) && p > 0)
+    if (prices.length > 0) {
+      lowestPrice = Math.min(...prices)
+    }
+  }
+
   return (
-    <div className="card">
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}>
-        {/* Using standard img to avoid next/image config for external domains for now */}
-        <img 
-          src={event.poster} 
-          alt={event.name} 
-          style={{ objectFit: 'cover', width: '100%', height: '100%' }} 
+    <article className="card event-card">
+      <div className="event-poster-wrap">
+        <img
+          src={event.poster}
+          alt={event.name}
+          className="event-poster-img"
+          loading="lazy"
         />
       </div>
-      <div style={{ padding: 'var(--spacing-lg)' }}>
-        <h3 style={{ fontSize: '1.25rem', marginBottom: 'var(--spacing-sm)' }}>{event.name}</h3>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--spacing-md)' }}>
-          <span role="img" aria-label="location">📍</span> {event.venue}
-        </p>
-        
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--spacing-lg)' }}>
-          <div>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-tertiary)', textDecoration: 'line-through' }}>
-              Online: ₹{event.onlinePrice}
-            </p>
-            <p style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-              ₹{lowestPrice} <span style={{ fontSize: '0.875rem', fontWeight: 400, color: 'var(--text-secondary)' }}>onwards</span>
+
+      <div className="event-card-body">
+        <div className="event-info-row">
+          <div className="event-meta">
+            <h3 className="event-title">{event.name}</h3>
+            <p className="event-venue">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, color: 'var(--brand)' }}>
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>{event.venue}</span>
             </p>
           </div>
+
+          <div className="event-pricing">
+            <span className="price-online">Online: ₹{event.onlinePrice}</span>
+            <div className="price-aarambh">
+              ₹{lowestPrice} <span className="price-onwards">onwards</span>
+            </div>
+          </div>
         </div>
-        
-        <Link href={`/events/${event.id}`} className="btn btn-primary" style={{ width: '100%' }}>
-          BOOK NOW
+
+        <Link href={`/events/${event.id}`} scroll={true} className="btn btn-primary event-book-btn book-now-btn">
+          <span>BOOK NOW</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </Link>
       </div>
-    </div>
+    </article>
   )
 }
