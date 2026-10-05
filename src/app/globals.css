@@ -2384,6 +2384,437 @@ textarea {
   }
 }
 
+.admin-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ========================================================
+   VISITOR ANALYTICS DASHBOARD
+   ======================================================== */
+.admin-analytics-section {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 8px rgba(39, 34, 35, 0.04);
+}
+
+@media (max-width: 480px) {
+  .admin-analytics-section {
+    padding: 14px;
+    margin-bottom: 22px;
+  }
+}
+
+.admin-analytics-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-analytics-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-analytics-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.admin-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  background-color: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 9999px;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #065F46;
+}
+
+.admin-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10B981;
+  position: relative;
+}
+
+.admin-pulse-dot::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  background-color: #10B981;
+  opacity: 0.75;
+  animation: adminPulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes adminPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.admin-analytics-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.admin-analytics-refresh-btn:hover:not(:disabled) {
+  border-color: var(--brand);
+  color: var(--brand);
+  background: #FFF9F9;
+}
+
+.admin-analytics-refresh-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.admin-refresh-icon.spinning {
+  animation: spinIcon 0.8s linear infinite;
+}
+
+@keyframes spinIcon {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.admin-analytics-loading {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Quick Stat Cards Grid */
+.admin-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .admin-analytics-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+}
+
+.admin-stat-card {
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+@media (max-width: 480px) {
+  .admin-stat-card {
+    padding: 10px 12px;
+  }
+}
+
+.admin-stat-card:hover {
+  border-color: var(--border-subtle);
+  transform: translateY(-1px);
+}
+
+.admin-stat-card.card-live {
+  background: #F0FDF4;
+  border-color: #BBF7D0;
+}
+
+.admin-stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.admin-stat-label {
+  font-size: 0.775rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.card-live .admin-stat-label {
+  color: #047857;
+}
+
+.admin-stat-icon-wrap {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.admin-stat-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.4rem, 4vw, 1.85rem);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 3px;
+}
+
+.card-live .admin-stat-value {
+  color: #065F46;
+}
+
+.admin-stat-sub {
+  font-size: 0.725rem;
+  color: var(--text-muted);
+  line-height: 1.25;
+}
+
+/* Detailed Breakdowns (7-Day Trend + Top Passes) */
+.admin-analytics-breakdown-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 840px) {
+  .admin-analytics-breakdown-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+.admin-breakdown-card {
+  background: #FAF7F5;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+@media (max-width: 480px) {
+  .admin-breakdown-card {
+    padding: 12px;
+  }
+}
+
+.admin-breakdown-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-breakdown-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.975rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.admin-breakdown-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--brand);
+  background: var(--brand-soft);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* 7-Day Trend Rows */
+.admin-trend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.admin-trend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.admin-trend-date {
+  width: 78px;
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.admin-trend-bar-track {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  height: 9px;
+  overflow: hidden;
+}
+
+.admin-trend-bar-fill {
+  background: var(--brand);
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.admin-trend-numbers {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.trend-num-uniques strong {
+  color: var(--text);
+}
+
+.trend-num-views {
+  margin-left: 4px;
+  color: var(--text-muted);
+}
+
+/* Top Events Pass List */
+.admin-top-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-top-event-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.825rem;
+}
+
+.admin-event-rank-badge {
+  font-size: 0.725rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--surface-soft);
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.admin-event-rank-badge.rank-1 {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.admin-event-rank-badge.rank-2 {
+  background: #E5E7EB;
+  color: #374151;
+}
+
+.admin-event-rank-badge.rank-3 {
+  background: #FFEDD5;
+  color: #9A3412;
+}
+
+.admin-top-event-name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-top-event-views-badge {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.admin-top-event-views-badge strong {
+  color: var(--brand);
+}
+
+.admin-top-events-empty {
+  padding: 16px 0;
+  text-align: center;
+}
+
+.admin-empty-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Events Header & Divider */
+.admin-section-divider {
+  height: 1px;
+  background-color: var(--border);
+  margin: 28px 0 20px;
+}
+
+.admin-events-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.admin-section-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
 .admin-events-list {
   display: grid;
   grid-template-columns: 1fr;

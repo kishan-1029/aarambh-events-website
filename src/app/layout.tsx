@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 export const metadata: Metadata = {
   title: "Aarambh Events | Ahmedabad's Trusted Event Passes",
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <AnalyticsTracker />
         <Navbar />
         <main style={{ flex: 1 }}>{children}</main>
         <Footer />
