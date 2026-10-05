@@ -28,7 +28,7 @@ export default function AdminGate({ children }: AdminGateProps) {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (password === 'admin123') {
+    if (password === 'Kisrus@8893') {
       try {
         sessionStorage.setItem('aarambh_admin_authenticated', 'true')
       } catch {
