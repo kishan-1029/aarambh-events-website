@@ -45,10 +45,21 @@ function AdminDashboardContent() {
   const loadAnalytics = useCallback(async (isManual = false) => {
     if (isManual) setIsRefreshingAnalytics(true)
     try {
-      const summary = await getAnalyticsSummary()
-      setAnalytics(summary)
-    } catch (err) {
-      console.error('Failed to load analytics summary:', err)
+      const res = await fetch('/api/analytics/summary', { cache: 'no-store' })
+      if (res.ok) {
+        const summary = await res.json()
+        setAnalytics(summary)
+      } else {
+        const summary = await getAnalyticsSummary()
+        setAnalytics(summary)
+      }
+    } catch {
+      try {
+        const summary = await getAnalyticsSummary()
+        setAnalytics(summary)
+      } catch (err) {
+        console.error('Failed to load analytics summary:', err)
+      }
     } finally {
       setIsAnalyticsLoading(false)
       if (isManual) {

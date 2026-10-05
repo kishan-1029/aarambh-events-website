@@ -18,7 +18,7 @@ export type AnalyticsSummary = {
 type StoredAnalytics = {
   totalViews: number
   allTimeUniques: number
-  allTimeHashes: Record<string, boolean>
+  allTimeVisitors: Record<string, boolean>
   daily: Record<
     string,
     {
@@ -34,11 +34,6 @@ type StoredAnalytics = {
 const dataPath = path.join(process.cwd(), 'src/data/analytics.json')
 const tempPath = path.join(process.cwd(), 'src/data/analytics.tmp.json')
 
-// In-memory cache for fast read/write and debounced disk persistence
-let memoryData: StoredAnalytics | null = null
-let isDirty = false
-let saveTimeout: NodeJS.Timeout | null = null
-
 function getTodayString(): string {
   const now = new Date()
   const year = now.getFullYear()
@@ -48,56 +43,49 @@ function getTodayString(): string {
 }
 
 async function loadAnalyticsFromDisk(): Promise<StoredAnalytics> {
-  if (memoryData) return memoryData
-
   try {
     const raw = await fs.readFile(dataPath, 'utf-8')
-    memoryData = JSON.parse(raw) as StoredAnalytics
+    const parsed = JSON.parse(raw)
+    return {
+      totalViews: typeof parsed.totalViews === 'number' ? parsed.totalViews : 0,
+      allTimeUniques: typeof parsed.allTimeUniques === 'number' ? parsed.allTimeUniques : 0,
+      allTimeVisitors: parsed.allTimeVisitors || {},
+      daily: parsed.daily || {},
+      activeVisitors: parsed.activeVisitors || {},
+      eventViews: parsed.eventViews || {},
+    }
   } catch {
-    memoryData = {
+    return {
       totalViews: 0,
       allTimeUniques: 0,
-      allTimeHashes: {},
+      allTimeVisitors: {},
       daily: {},
       activeVisitors: {},
       eventViews: {},
     }
   }
-
-  return memoryData
 }
 
-async function flushToDisk() {
-  if (!isDirty || !memoryData) return
-  isDirty = false
-
+async function saveAnalyticsToDisk(data: StoredAnalytics): Promise<void> {
   try {
     const dir = path.dirname(dataPath)
     await fs.mkdir(dir, { recursive: true })
-    const serialized = JSON.stringify(memoryData, null, 2)
+    const serialized = JSON.stringify(data, null, 2)
     await fs.writeFile(tempPath, serialized, 'utf-8')
     await fs.rename(tempPath, dataPath)
   } catch (err) {
-    console.error('Failed to flush analytics to disk:', err)
+    console.error('Failed to save analytics to disk:', err)
   }
-}
-
-function scheduleSave() {
-  isDirty = true
-  if (saveTimeout) return
-  saveTimeout = setTimeout(() => {
-    saveTimeout = null
-    flushToDisk().catch(() => {})
-  }, 2000)
 }
 
 export async function trackPageView(
   pathname: string,
   ip: string,
   userAgent: string,
+  visitorId?: string,
   eventId?: string
 ) {
-  // Ignore tracking for admin routes
+  // Never track admin panel pages
   if (pathname.startsWith('/admin')) {
     return { success: true }
   }
@@ -106,35 +94,34 @@ export async function trackPageView(
   const now = Date.now()
   const today = getTodayString()
 
-  // Generate anonymized daily hash for unique visitor tracking
-  const rawHashInput = `${ip || '127.0.0.1'}-${userAgent || 'unknown'}-${today}`
-  const visitorHash = crypto
-    .createHash('sha256')
-    .update(rawHashInput)
-    .digest('hex')
-    .substring(0, 16)
+  // Use client-generated visitorId if available; fallback to hashed IP + UA
+  let visitorKey = visitorId && visitorId.trim().length > 3 ? visitorId.trim() : ''
+  if (!visitorKey) {
+    const raw = `${ip || '127.0.0.1'}-${userAgent || 'unknown'}`
+    visitorKey = crypto.createHash('sha256').update(raw).digest('hex').substring(0, 16)
+  }
 
-  // 1. Increment total views
+  // 1. Total views
   data.totalViews = (data.totalViews || 0) + 1
 
-  // 2. Track all-time unique
-  if (!data.allTimeHashes) data.allTimeHashes = {}
-  if (!data.allTimeHashes[visitorHash]) {
-    data.allTimeHashes[visitorHash] = true
-    data.allTimeUniques = (data.allTimeUniques || 0) + 1
+  // 2. All-time unique visitors
+  if (!data.allTimeVisitors) data.allTimeVisitors = {}
+  if (!data.allTimeVisitors[visitorKey]) {
+    data.allTimeVisitors[visitorKey] = true
+    data.allTimeUniques = Object.keys(data.allTimeVisitors).length
 
-    // Keep allTimeHashes from growing infinitely (keep most recent 20,000)
-    const keys = Object.keys(data.allTimeHashes)
-    if (keys.length > 25000) {
+    // Limit memory footprint of allTimeVisitors keys to 25k
+    const allKeys = Object.keys(data.allTimeVisitors)
+    if (allKeys.length > 25000) {
       const trimmed: Record<string, boolean> = {}
-      keys.slice(-15000).forEach(k => {
+      allKeys.slice(-15000).forEach(k => {
         trimmed[k] = true
       })
-      data.allTimeHashes = trimmed
+      data.allTimeVisitors = trimmed
     }
   }
 
-  // 3. Track daily views and unique visitors
+  // 3. Daily views & unique visitors
   if (!data.daily) data.daily = {}
   if (!data.daily[today]) {
     data.daily[today] = { views: 0, uniques: 0, visitors: [] }
@@ -143,12 +130,12 @@ export async function trackPageView(
   const todayRecord = data.daily[today]
   todayRecord.views = (todayRecord.views || 0) + 1
 
-  if (!todayRecord.visitors.includes(visitorHash)) {
-    todayRecord.visitors.push(visitorHash)
+  if (!todayRecord.visitors.includes(visitorKey)) {
+    todayRecord.visitors.push(visitorKey)
     todayRecord.uniques = todayRecord.visitors.length
   }
 
-  // Clean up older daily records (keep last 60 days)
+  // Clean up daily records older than 60 days
   const allDays = Object.keys(data.daily).sort()
   if (allDays.length > 60) {
     const toRemove = allDays.slice(0, allDays.length - 60)
@@ -157,25 +144,25 @@ export async function trackPageView(
     }
   }
 
-  // 4. Update real-time active visitors (last 5 minutes)
+  // 4. Real-time active visitors (active in last 5 minutes)
   if (!data.activeVisitors) data.activeVisitors = {}
-  data.activeVisitors[visitorHash] = now
+  data.activeVisitors[visitorKey] = now
 
-  // Remove active visitor entries older than 5 minutes
   const fiveMinutesAgo = now - 5 * 60 * 1000
-  for (const [hash, timestamp] of Object.entries(data.activeVisitors)) {
+  for (const [key, timestamp] of Object.entries(data.activeVisitors)) {
     if (timestamp < fiveMinutesAgo) {
-      delete data.activeVisitors[hash]
+      delete data.activeVisitors[key]
     }
   }
 
-  // 5. Track specific event views
+  // 5. Specific event views
   if (eventId) {
     if (!data.eventViews) data.eventViews = {}
     data.eventViews[eventId] = (data.eventViews[eventId] || 0) + 1
   }
 
-  scheduleSave()
+  // Immediately persist so refresh always shows real-time data
+  await saveAnalyticsToDisk(data)
   return { success: true }
 }
 
@@ -187,14 +174,22 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   // Clean & count active visitors in the last 5 minutes
   const fiveMinutesAgo = now - 5 * 60 * 1000
   let liveActive = 0
+  let activeChanged = false
+
   if (data.activeVisitors) {
-    for (const [hash, timestamp] of Object.entries(data.activeVisitors)) {
+    for (const [key, timestamp] of Object.entries(data.activeVisitors)) {
       if (timestamp >= fiveMinutesAgo) {
         liveActive++
       } else {
-        delete data.activeVisitors[hash]
+        delete data.activeVisitors[key]
+        activeChanged = true
       }
     }
+  }
+
+  if (activeChanged) {
+    // Non-blocking cleanup save
+    saveAnalyticsToDisk(data).catch(() => {})
   }
 
   // Today stats

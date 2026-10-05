@@ -3,16 +3,31 @@
 import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 
+function getOrCreateVisitorId(): string {
+  if (typeof window === 'undefined') return ''
+  try {
+    let vid = localStorage.getItem('aarambh_vid')
+    if (!vid || vid.length < 5) {
+      vid = 'v_' + Math.random().toString(36).substring(2, 10) + '_' + Date.now().toString(36)
+      localStorage.setItem('aarambh_vid', vid)
+    }
+    return vid
+  } catch {
+    return 'v_' + Math.random().toString(36).substring(2, 10)
+  }
+}
+
 export default function AnalyticsTracker() {
   const pathname = usePathname()
   const lastTrackedPath = useRef<string | null>(null)
 
   useEffect(() => {
-    // Avoid double counting same path in rapid succession
-    if (lastTrackedPath.current === pathname) return
-    lastTrackedPath.current = pathname
+    // Never track admin panel pages
+    if (pathname.startsWith('/admin')) return
 
-    // Extract event ID if visiting an event details page (/events/event-xyz)
+    const visitorId = getOrCreateVisitorId()
+
+    // Extract event ID if visiting an event details page (/events/xyz)
     let eventId: string | undefined = undefined
     const match = pathname.match(/^\/events\/([^/]+)/)
     if (match && match[1] && match[1] !== 'book') {
@@ -21,54 +36,47 @@ export default function AnalyticsTracker() {
 
     const payload = JSON.stringify({
       path: pathname,
+      visitorId,
       eventId,
     })
 
     const sendHit = () => {
       try {
-        if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
-          const blob = new Blob([payload], { type: 'application/json' })
-          const sent = navigator.sendBeacon('/api/analytics/track', blob)
-          if (!sent) {
-            fetch('/api/analytics/track', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: payload,
-              keepalive: true,
-            }).catch(() => {})
-          }
-        } else {
-          fetch('/api/analytics/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: payload,
-            keepalive: true,
-          }).catch(() => {})
-        }
+        fetch('/api/analytics/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+          keepalive: true,
+        }).catch(() => {})
       } catch {
         // ignore
       }
     }
 
+    // Send pageview on route change or initial load
     sendHit()
+    lastTrackedPath.current = pathname
 
-    // Heartbeat every 90 seconds while tab is active to maintain live online accuracy
+    // Periodic heartbeat every 45s while tab is visible to keep live visitor status accurate
     const interval = setInterval(() => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
-        try {
-          fetch('/api/analytics/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: payload,
-            keepalive: true,
-          }).catch(() => {})
-        } catch {
-          // ignore
-        }
+        sendHit()
       }
-    }, 90000)
+    }, 45000)
 
-    return () => clearInterval(interval)
+    // Also send hit when tab becomes active again
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        sendHit()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [pathname])
 
   return null
