@@ -9,7 +9,7 @@ function AdminDashboardContent() {
   const [events, setEvents] = useState<Event[]>([])
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
   const [isAddingNew, setIsAddingNew] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const loadEvents = async () => {
     setIsLoading(true)
@@ -19,7 +19,16 @@ function AdminDashboardContent() {
   }
 
   useEffect(() => {
-    loadEvents()
+    let ignore = false
+    getEvents().then(data => {
+      if (!ignore) {
+        setEvents(data)
+        setIsLoading(false)
+      }
+    })
+    return () => {
+      ignore = true
+    }
   }, [])
 
   const handleLogout = () => {
@@ -45,7 +54,7 @@ function AdminDashboardContent() {
       <div className="admin-page">
         <button 
           onClick={() => { setIsAddingNew(false); setEditingEvent(null); }} 
-          className="btn btn-outline mb-md"
+          className="btn btn-outline admin-back-btn mb-md"
         >
           ← Back to Dashboard
         </button>
@@ -85,6 +94,9 @@ function AdminDashboardContent() {
                 />
                 <div className="admin-event-details">
                   <h3 className="admin-event-name">{event.name}</h3>
+                  {event.venue && (
+                    <p className="admin-event-venue-text">{event.venue}</p>
+                  )}
                   <p className="admin-event-dates-count">
                     {(event.categoryCount && event.categoryCount > 1 && event.categories && event.categories.length > 0)
                       ? `${event.categories.length} Categories (${event.categories[0].dates.length} Dates)`

@@ -21,6 +21,7 @@ export type Event = {
   id: string
   name: string
   venue: string
+  mapLink?: string
   poster: string
   onlinePrice: number
   categoryCount?: number
@@ -51,6 +52,7 @@ export async function addEvent(eventData: Omit<Event, 'id' | 'createdAt' | 'upda
   const events = await getEvents()
   const newEvent: Event = {
     ...eventData,
+    mapLink: eventData.mapLink ? eventData.mapLink.trim() : '',
     id: `event-${Date.now()}`,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
@@ -84,6 +86,7 @@ export async function updateEvent(id: string, eventData: Omit<Event, 'id' | 'cre
   const updatedEvent: Event = {
     ...events[index],
     ...eventData,
+    mapLink: eventData.mapLink !== undefined ? eventData.mapLink.trim() : (events[index].mapLink || ''),
     updatedAt: new Date().toISOString()
   }
   

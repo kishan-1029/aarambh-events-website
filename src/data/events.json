@@ -62,8 +62,9 @@
     ],
     "id": "event-1790885969267",
     "createdAt": "2026-10-01T20:19:29.267Z",
-    "updatedAt": "2026-10-02T07:57:41.800Z",
-    "categoryCount": 1
+    "updatedAt": "2026-10-02T11:54:06.235Z",
+    "categoryCount": 1,
+    "mapLink": "https://maps.app.goo.gl/f1ecCEDGRga2tLMN6"
   },
   {
     "name": "Hashtag Navratri",
@@ -128,7 +129,9 @@
     ],
     "id": "event-1790886778289",
     "createdAt": "2026-10-01T20:32:58.290Z",
-    "updatedAt": "2026-10-01T21:10:56.605Z"
+    "updatedAt": "2026-10-05T09:52:15.915Z",
+    "mapLink": "https://maps.app.goo.gl/nTwQ1rFFhSM6pVwJ6",
+    "categoryCount": 1
   },
   {
     "name": "VRINDAVAN NAGARI",
@@ -193,7 +196,9 @@
     ],
     "id": "event-1790886960550",
     "createdAt": "2026-10-01T20:36:00.550Z",
-    "updatedAt": "2026-10-01T21:12:06.476Z"
+    "updatedAt": "2026-10-02T11:57:17.225Z",
+    "mapLink": "https://maps.app.goo.gl/pvnyjqww2kUpQnfB7",
+    "categoryCount": 1
   },
   {
     "name": "Fadiyu",
@@ -258,7 +263,9 @@
     ],
     "id": "event-1790887172269",
     "createdAt": "2026-10-01T20:39:32.269Z",
-    "updatedAt": "2026-10-01T21:13:33.373Z"
+    "updatedAt": "2026-10-02T11:58:05.193Z",
+    "mapLink": "https://maps.app.goo.gl/1giR9xMULRfFcbPq9",
+    "categoryCount": 1
   },
   {
     "name": "Shakti Sandhya",
@@ -388,7 +395,9 @@
     ],
     "id": "event-1790888843389",
     "createdAt": "2026-10-01T21:07:23.389Z",
-    "updatedAt": "2026-10-01T21:17:10.131Z"
+    "updatedAt": "2026-10-02T11:59:59.896Z",
+    "mapLink": "https://maps.app.goo.gl/oiecVVyy1LUSmM7t7",
+    "categoryCount": 1
   },
   {
     "name": "ANANT RATRI",
@@ -453,7 +462,9 @@
     ],
     "id": "event-1790888932649",
     "createdAt": "2026-10-01T21:08:52.649Z",
-    "updatedAt": "2026-10-01T21:18:11.206Z"
+    "updatedAt": "2026-10-02T12:00:28.214Z",
+    "mapLink": "https://maps.app.goo.gl/bNKicXhoGD1a37Q19",
+    "categoryCount": 1
   },
   {
     "name": "9 NORTA",
@@ -518,7 +529,9 @@
     ],
     "id": "event-1790889158932",
     "createdAt": "2026-10-01T21:12:38.932Z",
-    "updatedAt": "2026-10-01T21:25:11.401Z"
+    "updatedAt": "2026-10-02T12:01:41.870Z",
+    "mapLink": "https://maps.app.goo.gl/VRAWuLfi51KpENxMA",
+    "categoryCount": 1
   },
   {
     "name": "SACHI NAVARATRI",
@@ -527,7 +540,7 @@
     "onlinePrice": 1200,
     "id": "event-1790889289070",
     "createdAt": "2026-10-01T21:14:49.070Z",
-    "updatedAt": "2026-10-01T22:26:47.235Z",
+    "updatedAt": "2026-10-02T12:02:18.817Z",
     "categoryCount": 2,
     "categories": [
       {
@@ -650,7 +663,8 @@
           }
         ]
       }
-    ]
+    ],
+    "mapLink": "https://maps.app.goo.gl/rfBqraB9ofRf4Qij6"
   },
   {
     "name": "Rudaah Garba",
@@ -780,7 +794,9 @@
     ],
     "id": "event-1790890417298",
     "createdAt": "2026-10-01T21:33:37.298Z",
-    "updatedAt": "2026-10-01T21:33:37.298Z"
+    "updatedAt": "2026-10-02T12:05:19.976Z",
+    "mapLink": "https://maps.app.goo.gl/FznUHP2XmCGD2JYx6",
+    "categoryCount": 1
   },
   {
     "name": "Garbi na garba",
@@ -845,7 +861,9 @@
     ],
     "id": "event-1790890715868",
     "createdAt": "2026-10-01T21:38:35.868Z",
-    "updatedAt": "2026-10-01T21:38:51.720Z"
+    "updatedAt": "2026-10-02T12:08:03.205Z",
+    "mapLink": "https://maps.app.goo.gl/JcwgXDyjRcaLmcgY6",
+    "categoryCount": 1
   },
   {
     "name": "Raatladi",
@@ -910,7 +928,9 @@
     ],
     "id": "event-1790891254152",
     "createdAt": "2026-10-01T21:47:34.152Z",
-    "updatedAt": "2026-10-01T21:47:34.152Z"
+    "updatedAt": "2026-10-02T12:09:06.769Z",
+    "mapLink": "https://maps.app.goo.gl/eevhUQqDGoRbf9u48",
+    "categoryCount": 1
   },
   {
     "name": "Safed Parindey",
@@ -933,6 +953,8 @@
     ],
     "id": "event-1790891854322",
     "createdAt": "2026-10-01T21:57:34.322Z",
-    "updatedAt": "2026-10-01T21:57:34.322Z"
+    "updatedAt": "2026-10-02T12:11:02.037Z",
+    "mapLink": "",
+    "categoryCount": 1
   }
 ]

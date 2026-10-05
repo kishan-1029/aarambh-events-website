@@ -1,5 +1,5 @@
 import { getEvents } from '@/actions/eventActions'
-import EventCard from '@/components/EventCard'
+import EventFiltersSection from '@/components/EventFiltersSection'
 import ContactPhoneList from '@/components/ContactPhoneList'
 
 export const revalidate = 0; // ensure fresh data
@@ -51,26 +51,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 5. Available Events Section - Clean & Direct, NO Subtitle */}
-      <section id="passes" className="passes-section">
-        <div className="container">
-          <div className="section-header-compact">
-            <h2 className="section-title">Available Events</h2>
-          </div>
-
-          {events.length > 0 ? (
-            <div className="events-grid">
-              {events.map(event => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
-          ) : (
-            <div className="no-events-card">
-              <p>No events currently available. Check back soon!</p>
-            </div>
-          )}
-        </div>
-      </section>
+      {/* 5. Available Events Section with Instant Search & Filters */}
+      <EventFiltersSection events={events} />
 
       {/* 8. WhatsApp Community Section - Refined Brand Styling */}
       <section className="community-section">

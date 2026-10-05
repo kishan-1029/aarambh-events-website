@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 
 const PHONE_NUMBERS = [
@@ -10,25 +10,27 @@ const PHONE_NUMBERS = [
   '+91 63594 31859',
 ]
 
+const emptySubscribe = () => () => {}
+
 export default function ContactPhoneList() {
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null)
-  const [isMounted, setIsMounted] = useState(false)
+  const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
 
   useEffect(() => {
-    setIsMounted(true)
-    return () => {
-      document.body.style.overflow = 'unset'
+    if (selectedPhone) {
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = 'unset'
+      }
     }
-  }, [])
+  }, [selectedPhone])
 
   const handleSelect = (phone: string) => {
     setSelectedPhone(phone)
-    document.body.style.overflow = 'hidden'
   }
 
   const handleClose = () => {
     setSelectedPhone(null)
-    document.body.style.overflow = 'unset'
   }
 
   // Extract digits only for tel: and https://wa.me/

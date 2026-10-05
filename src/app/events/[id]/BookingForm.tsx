@@ -1,16 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { Event, EventDate, EventCategory } from '@/actions/eventActions'
+
+const emptySubscribe = () => () => {}
 
 export default function BookingForm({ event }: { event: Event }) {
   const router = useRouter()
   const [selectedDate, setSelectedDate] = useState<EventDate | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<EventCategory | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
+  const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
 
   // Form State
   const [name, setName] = useState('')
@@ -23,13 +25,15 @@ export default function BookingForm({ event }: { event: Event }) {
     ? event.categories[0].dates
     : (event.dates || [])
 
-  // Mount tracking & body scroll lock cleanup
+  // Body scroll lock effect
   useEffect(() => {
-    setIsMounted(true)
-    return () => {
-      document.body.style.overflow = 'unset'
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = 'unset'
+      }
     }
-  }, [])
+  }, [isModalOpen])
 
   const handleDateSelect = (date: EventDate) => {
     // Mobile responsive rule: on mobile (<= 639px), navigate to dedicated booking page
@@ -41,13 +45,11 @@ export default function BookingForm({ event }: { event: Event }) {
     setSelectedCategory(null)
     setSelectedDate(date)
     setIsModalOpen(true)
-    document.body.style.overflow = 'hidden'
   }
 
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setSelectedCategory(null)
-    document.body.style.overflow = 'unset'
   }
 
   const formatDisplayDate = (dateStr: string) => {

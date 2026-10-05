@@ -1,28 +1,28 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 
 interface AdminGateProps {
   children: React.ReactNode
 }
 
+const emptySubscribe = () => () => {}
+
 export default function AdminGate({ children }: AdminGateProps) {
-  const [authenticated, setAuthenticated] = useState(false)
+  const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
+  const [authenticated, setAuthenticated] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return sessionStorage.getItem('aarambh_admin_authenticated') === 'true'
+      } catch {
+        return false
+      }
+    }
+    return false
+  })
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [hydrated, setHydrated] = useState(false)
-
-  // Check sessionStorage on mount without hydration mismatch
-  useEffect(() => {
-    try {
-      const loggedIn = sessionStorage.getItem('aarambh_admin_authenticated') === 'true'
-      setAuthenticated(loggedIn)
-    } catch {
-      // sessionStorage unavailable
-    }
-    setHydrated(true)
-  }, [])
 
   // Login submit logic
   const handleLogin = (e: React.FormEvent) => {
@@ -43,7 +43,7 @@ export default function AdminGate({ children }: AdminGateProps) {
   }
 
   // Prevent flash of unauthenticated content before hydration
-  if (!hydrated) {
+  if (!isMounted) {
     return (
       <div className="container section" style={{ maxWidth: '420px', padding: '60px 16px', textAlign: 'center' }}>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Loading...</p>
@@ -58,9 +58,9 @@ export default function AdminGate({ children }: AdminGateProps) {
 
   // Login view
   return (
-    <div className="container section" style={{ maxWidth: '420px', padding: '40px 16px' }}>
-      <div className="card" style={{ padding: '32px 24px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '20px' }}>Admin Login</h1>
+    <div className="container section admin-login-section">
+      <div className="card admin-login-card">
+        <h1 className="admin-login-heading">Admin Login</h1>
 
         {error && (
           <div className="admin-error-text" role="alert">

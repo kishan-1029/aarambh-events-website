@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Event, EventCategory, EventDate, addEvent, updateEvent } from '@/actions/eventActions'
+import { Event, addEvent, updateEvent } from '@/actions/eventActions'
 
 type EventFormProps = {
   eventToEdit: Event | null
@@ -48,6 +48,8 @@ const DEFAULT_NAVRATRI_DATES: FormEventDate[] = [
 export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
   const [name, setName] = useState(eventToEdit?.name || '')
   const [venue, setVenue] = useState(eventToEdit?.venue || '')
+  const [mapLink, setMapLink] = useState(eventToEdit?.mapLink || '')
+  const [mapLinkError, setMapLinkError] = useState('')
   const [poster, setPoster] = useState(eventToEdit?.poster || '')
   const [previewUrl, setPreviewUrl] = useState(eventToEdit?.poster || '')
   const [uploadedFileName, setUploadedFileName] = useState('')
@@ -350,6 +352,26 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
       return
     }
 
+    const trimmedMapLink = mapLink.trim()
+    if (trimmedMapLink) {
+      let isValidUrl = false
+      try {
+        const parsed = new URL(trimmedMapLink)
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+          isValidUrl = true
+        }
+      } catch {
+        isValidUrl = false
+      }
+
+      if (!isValidUrl) {
+        setMapLinkError('Please enter a valid map link.')
+        alert('Please enter a valid map link.')
+        return
+      }
+    }
+    setMapLinkError('')
+
     if (categoryCount > 1) {
       // 1. Validate category names (Required for every category when count > 1)
       for (let i = 0; i < categories.length; i++) {
@@ -414,9 +436,10 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
     setIsSaving(true)
 
     // Construct eventData according to specification
-    const eventData: any = {
+    const eventData: Omit<Event, 'id' | 'createdAt' | 'updatedAt'> = {
       name: name.trim(),
       venue: venue.trim(),
+      mapLink: trimmedMapLink,
       poster: poster.trim(),
       onlinePrice: parsedOnline,
       categoryCount,
@@ -471,7 +494,7 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
 
   return (
     <div className="card admin-form-card">
-      <h2 style={{ marginBottom: 'var(--spacing-lg)' }}>
+      <h2 className="admin-form-heading">
         {eventToEdit ? 'Edit Event' : 'Add New Event'}
       </h2>
 
@@ -502,9 +525,32 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
           />
         </div>
 
+        <div className="form-group mb-md">
+          <label className="form-label">Map Link</label>
+          <input
+            type="text"
+            className="form-input"
+            value={mapLink}
+            onChange={e => {
+              setMapLink(e.target.value)
+              if (mapLinkError) setMapLinkError('')
+            }}
+            placeholder="https://maps.google.com/..."
+            style={{ minHeight: '44px' }}
+          />
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>
+            Optional — paste Google Maps or other map location link
+          </span>
+          {mapLinkError && (
+            <span style={{ fontSize: '0.75rem', color: '#EF4444', marginTop: '4px', display: 'block', fontWeight: 600 }}>
+              {mapLinkError}
+            </span>
+          )}
+        </div>
+
         {/* Poster Upload Section */}
         <div className="form-group mb-md">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '4px' }}>
             <label className="form-label" style={{ margin: 0 }}>Event Poster Image *</label>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               JPG, PNG, WEBP, AVIF (Max 5 MB)
@@ -512,31 +558,13 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
           </div>
 
           {/* Direct File Upload Area */}
-          <div
-            style={{
-              position: 'relative',
-              border: uploadError ? '2px dashed #EF4444' : '2px dashed var(--border)',
-              borderRadius: 'var(--radius-md)',
-              padding: '20px 16px',
-              textAlign: 'center',
-              backgroundColor: 'var(--surface-soft)',
-              transition: 'all 0.2s ease',
-            }}
-          >
+          <div className={`admin-poster-dropzone ${uploadError ? 'has-error' : ''}`}>
             <input
               type="file"
               id="poster-file-upload"
               accept="image/jpeg,image/png,image/webp,image/avif"
               onChange={handleFileSelect}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                opacity: 0,
-                cursor: 'pointer',
-                zIndex: 2,
-              }}
+              className="admin-poster-file-input"
               aria-label="Upload poster image in JPG, PNG, WEBP, or AVIF"
             />
 
@@ -581,30 +609,11 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
 
           {/* Uploaded Poster Preview (Supports AVIF, WEBP, PNG, JPG) */}
           {(previewUrl || poster) && (
-            <div
-              style={{
-                marginTop: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '10px 12px',
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-sm)',
-              }}
-            >
+            <div className="admin-poster-preview-card">
               <img
                 src={previewUrl || poster}
                 alt="Event Poster Preview"
-                style={{
-                  width: '72px',
-                  height: '72px',
-                  objectFit: 'cover',
-                  borderRadius: 'var(--radius-xs)',
-                  border: '1px solid var(--border-subtle)',
-                  flexShrink: 0,
-                  backgroundColor: 'var(--surface-soft)',
-                }}
+                className="admin-poster-preview-img"
               />
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -696,15 +705,15 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
 
         {/* Single Pass Dates & Prices (When categoryCount === 1) */}
         {categoryCount === 1 && (
-          <div style={{ margin: 'var(--spacing-xl) 0', padding: 'var(--spacing-md)', backgroundColor: 'var(--surface-soft)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-md)', flexWrap: 'wrap', gap: '8px' }}>
+          <div className="admin-pricing-card">
+            <div className="admin-pricing-card-header">
               <div>
                 <h3 style={{ fontSize: '1.125rem', margin: 0 }}>Dates and Prices *</h3>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
                   Aarambh Price is automatically calculated as Purchasing Price + Commission.
                 </p>
               </div>
-              <button type="button" onClick={handleAddDate} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: '0.875rem', minHeight: '44px' }}>
+              <button type="button" onClick={handleAddDate} className="btn btn-outline admin-btn-add-date">
                 + Add Date
               </button>
             </div>
@@ -784,10 +793,11 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
                     aria-label="Remove date"
                     title="Remove date"
                   >
-                    ✕
+                    <span className="admin-remove-icon" aria-hidden="true">✕</span>
+                    <span className="admin-remove-text">Remove Date</span>
                   </button>
                 ) : (
-                  <div style={{ minWidth: '44px' }} />
+                  <div className="admin-date-remove-spacer" />
                 )}
               </div>
             ))}
@@ -796,33 +806,15 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
 
         {/* Multi-Category Panels (When categoryCount >= 2) */}
         {categoryCount > 1 && (
-          <div style={{ margin: 'var(--spacing-xl) 0' }}>
+          <div className="admin-categories-list">
             {categories.map((cat, catIndex) => (
               <div
                 key={cat.id || `cat-panel-${catIndex}`}
-                style={{
-                  marginBottom: '24px',
-                  padding: '20px',
-                  backgroundColor: 'var(--surface-soft)',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1.5px solid var(--border)',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-                }}
+                className="admin-category-card"
               >
                 {/* Category Header */}
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '16px',
-                    paddingBottom: '12px',
-                    borderBottom: '1px solid var(--border)',
-                    flexWrap: 'wrap',
-                    gap: '8px',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div className="admin-category-header">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     <span
                       style={{
                         backgroundColor: 'var(--brand)',
@@ -845,8 +837,7 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
                   <button
                     type="button"
                     onClick={() => handleAddDateToCategory(catIndex)}
-                    className="btn btn-outline"
-                    style={{ padding: '6px 14px', fontSize: '0.85rem', minHeight: '38px' }}
+                    className="btn btn-outline admin-btn-add-date"
                   >
                     + Add Date
                   </button>
@@ -947,10 +938,11 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
                           aria-label="Remove date"
                           title="Remove date"
                         >
-                          ✕
+                          <span className="admin-remove-icon" aria-hidden="true">✕</span>
+                          <span className="admin-remove-text">Remove Date</span>
                         </button>
                       ) : (
-                        <div style={{ minWidth: '44px' }} />
+                        <div className="admin-date-remove-spacer" />
                       )}
                     </div>
                   ))}
@@ -962,11 +954,10 @@ export default function EventForm({ eventToEdit, onSuccess }: EventFormProps) {
 
         <button
           type="submit"
-          className="btn btn-primary"
-          style={{ width: '100%', minHeight: '48px', fontSize: '1rem', fontWeight: 700 }}
+          className="btn btn-primary admin-btn-save"
           disabled={isSaving || isUploading}
         >
-          {isSaving ? 'Saving...' : 'SAVE EVENT'}
+          {isSaving ? 'Saving...' : (eventToEdit ? 'UPDATE EVENT' : 'SAVE EVENT')}
         </button>
       </form>
     </div>
