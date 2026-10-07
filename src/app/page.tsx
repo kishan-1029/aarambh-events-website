@@ -175,6 +175,29 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Important Booking Information */}
+      <section className="important-booking-section">
+        <div className="container">
+          <div className="important-booking-card">
+            <h2 className="important-booking-heading">Important Booking Information</h2>
+            <div className="important-booking-text">
+              <p>
+                Aarambh Events is an independent pass sourcing and booking facilitation service and is not the organizer of the events displayed on this website.
+              </p>
+              <p>
+                Event names, venues, dates and pass categories are displayed solely for identification and customer enquiry purposes. Pass availability is sourced through independent distributors and third-party suppliers and is subject to confirmation at the time of booking.
+              </p>
+              <p>
+                Aarambh Events does not claim any official partnership, sponsorship, endorsement or authorization from an event organizer unless specifically mentioned.
+              </p>
+              <p>
+                Event schedules, venue rules, entry conditions, postponements and cancellations are determined by the respective event organizers. Customers are requested to confirm final availability, category, price and applicable booking conditions before making payment.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

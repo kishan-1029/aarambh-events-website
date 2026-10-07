@@ -59,7 +59,7 @@ export default function EventCard({ event }: { event: Event }) {
         </div>
 
         <Link href={`/events/${event.id}`} scroll={true} className="btn btn-primary event-book-btn book-now-btn">
-          <span>BOOK NOW</span>
+          <span>CHECK AVAILABILITY</span>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>

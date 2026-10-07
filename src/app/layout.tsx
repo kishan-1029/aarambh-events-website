@@ -7,6 +7,15 @@ import AnalyticsTracker from "@/components/AnalyticsTracker";
 export const metadata: Metadata = {
   title: "Aarambh Events | Ahmedabad's Trusted Event Passes",
   description: "Ahmedabad's Trusted Destination for Genuine Event Passes. Discover event passes at competitive prices.",
+  icons: {
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', type: 'image/png' },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
