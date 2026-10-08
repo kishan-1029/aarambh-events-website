@@ -1,5 +1,5 @@
 {
-  "totalViews": 159,
+  "totalViews": 177,
   "allTimeUniques": 6,
   "allTimeVisitors": {
     "v_lcj2ncje_muyg04rm": true,
@@ -11,7 +11,7 @@
   },
   "daily": {
     "2026-10-08": {
-      "views": 159,
+      "views": 177,
       "uniques": 6,
       "visitors": [
         "v_lcj2ncje_muyg04rm",
@@ -24,10 +24,11 @@
     }
   },
   "activeVisitors": {
-    "v_opvk7akz_muyhwyhu": 1791409095312
+    "v_lcj2ncje_muyg04rm": 1791454326300
   },
   "eventViews": {
     "event-1790886778289": 1,
-    "event-1790891254152": 7
+    "event-1790891254152": 7,
+    "event-1790888932649": 1
   }
 }
