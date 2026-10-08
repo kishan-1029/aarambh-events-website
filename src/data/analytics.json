@@ -1,13 +1,16 @@
 {
-  "totalViews": 179,
-  "allTimeUniques": 6,
+  "totalViews": 194,
+  "allTimeUniques": 9,
   "allTimeVisitors": {
     "v_lcj2ncje_muyg04rm": true,
     "v_opvk7akz_muyhwyhu": true,
     "v_3d9ddrbx_muyixntr": true,
     "v_r01oc0mg_muyj0iui": true,
     "v_q37pe7mk_muyjdoto": true,
-    "v_3qmyfdmk_muyje1s1": true
+    "v_3qmyfdmk_muyje1s1": true,
+    "v_9qqagse9_muzyfbuw": true,
+    "v_wlxcdyqd_muzygonh": true,
+    "v_deyroaz1_muzykca0": true
   },
   "daily": {
     "2026-10-08": {
@@ -21,10 +24,22 @@
         "v_q37pe7mk_muyjdoto",
         "v_3qmyfdmk_muyje1s1"
       ]
+    },
+    "2026-10-09": {
+      "views": 15,
+      "uniques": 4,
+      "visitors": [
+        "v_lcj2ncje_muyg04rm",
+        "v_9qqagse9_muzyfbuw",
+        "v_wlxcdyqd_muzygonh",
+        "v_deyroaz1_muzykca0"
+      ]
     }
   },
   "activeVisitors": {
-    "v_lcj2ncje_muyg04rm": 1791455382568
+    "v_9qqagse9_muzyfbuw": 1791489481310,
+    "v_wlxcdyqd_muzygonh": 1791489281374,
+    "v_deyroaz1_muzykca0": 1791489535539
   },
   "eventViews": {
     "event-1790886778289": 1,
