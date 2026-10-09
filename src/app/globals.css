@@ -69,6 +69,17 @@ body {
   padding-top: var(--mobile-nav-height);
 }
 
+main {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+}
+
 h1,
 h2,
 h3,
@@ -2324,15 +2335,15 @@ textarea {
 .admin-page {
   width: 100%;
   max-width: 100%;
-  padding: 24px 16px 60px;
+  margin: 0 auto;
+  padding: 20px 16px 60px;
   box-sizing: border-box;
-  overflow-x: clip;
+  min-width: 0;
 }
 
 @media (min-width: 768px) {
   .admin-page {
     max-width: 1160px;
-    margin: 0 auto;
     padding: var(--spacing-xxl) var(--spacing-md);
   }
 }
@@ -2342,6 +2353,9 @@ textarea {
   flex-direction: column;
   gap: 16px;
   margin-bottom: 24px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @media (min-width: 768px) {
@@ -2355,32 +2369,41 @@ textarea {
 
 .admin-heading {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.6rem, 7vw, 2.25rem);
+  font-size: clamp(1.4rem, 6vw, 2.25rem);
   font-weight: 700;
   line-height: 1.15;
   margin: 0;
   color: var(--text);
   word-break: break-word;
+  min-width: 0;
 }
 
 .admin-actions-group {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  align-items: center;
   gap: 10px;
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .admin-actions-group {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
 }
 
 @media (max-width: 360px) {
   .admin-actions-group {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (min-width: 768px) {
   .admin-actions-group {
-    display: flex;
     width: auto;
-    gap: 10px;
+    flex-shrink: 0;
   }
 }
 
@@ -2400,6 +2423,8 @@ textarea {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .admin-btn-logout {
@@ -2419,6 +2444,8 @@ textarea {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background-color 0.15s ease, border-color 0.15s ease;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -2439,6 +2466,7 @@ textarea {
   align-items: center;
   justify-content: center;
   padding: 0 16px;
+  box-sizing: border-box;
 }
 
 @media (max-width: 480px) {
@@ -2451,6 +2479,7 @@ textarea {
   font-size: 0.9rem;
   color: var(--text-muted);
   margin-top: 4px;
+  min-width: 0;
 }
 
 /* ========================================================
@@ -2463,6 +2492,10 @@ textarea {
   padding: 20px;
   margin-bottom: 28px;
   box-shadow: 0 2px 8px rgba(39, 34, 35, 0.04);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @media (max-width: 480px) {
@@ -2481,6 +2514,9 @@ textarea {
   margin-bottom: 20px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--border-subtle);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .admin-analytics-title-group {
@@ -2488,14 +2524,16 @@ textarea {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
 .admin-analytics-title {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 3.5vw, 1.25rem);
   font-weight: 700;
   color: var(--text);
   margin: 0;
+  min-width: 0;
 }
 
 .admin-live-badge {
@@ -2509,6 +2547,7 @@ textarea {
   font-size: 0.775rem;
   font-weight: 600;
   color: #065F46;
+  flex-shrink: 0;
 }
 
 .admin-pulse-dot {
@@ -2517,6 +2556,7 @@ textarea {
   border-radius: 50%;
   background-color: #10B981;
   position: relative;
+  flex-shrink: 0;
 }
 
 .admin-pulse-dot::after {
@@ -2562,6 +2602,7 @@ textarea {
   cursor: pointer;
   transition: all 0.15s ease;
   -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
 }
 
 .admin-analytics-refresh-btn:hover:not(:disabled) {
@@ -2594,15 +2635,30 @@ textarea {
 /* Quick Stat Cards Grid */
 .admin-analytics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 20px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 960px) {
+  .admin-analytics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 480px) {
   .admin-analytics-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
+  }
+}
+
+@media (max-width: 340px) {
+  .admin-analytics-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -2613,6 +2669,9 @@ textarea {
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
   transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
@@ -2637,6 +2696,7 @@ textarea {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 4px;
+  min-width: 0;
 }
 
 .admin-stat-label {
@@ -2645,6 +2705,7 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--text-muted);
+  min-width: 0;
 }
 
 .card-live .admin-stat-label {
@@ -2654,15 +2715,18 @@ textarea {
 .admin-stat-icon-wrap {
   font-size: 0.95rem;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .admin-stat-value {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.4rem, 4vw, 1.85rem);
+  font-size: clamp(1.25rem, 3.5vw, 1.85rem);
   font-weight: 800;
   color: var(--text);
   line-height: 1.15;
   margin-bottom: 3px;
+  min-width: 0;
+  word-break: break-all;
 }
 
 .card-live .admin-stat-value {
@@ -2673,18 +2737,23 @@ textarea {
   font-size: 0.725rem;
   color: var(--text-muted);
   line-height: 1.25;
+  min-width: 0;
+  word-break: break-word;
 }
 
 /* Detailed Breakdowns (7-Day Trend + Top Passes) */
 .admin-analytics-breakdown-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-@media (max-width: 840px) {
+@media (max-width: 860px) {
   .admin-analytics-breakdown-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
   }
 }
@@ -2694,6 +2763,9 @@ textarea {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 16px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 480px) {
@@ -2709,6 +2781,8 @@ textarea {
   margin-bottom: 14px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
+  min-width: 0;
+  gap: 8px;
 }
 
 .admin-breakdown-title {
@@ -2717,6 +2791,7 @@ textarea {
   font-weight: 700;
   color: var(--text);
   margin: 0;
+  min-width: 0;
 }
 
 .admin-breakdown-tag {
@@ -2727,6 +2802,7 @@ textarea {
   background: var(--brand-soft);
   padding: 2px 7px;
   border-radius: 4px;
+  flex-shrink: 0;
 }
 
 /* 7-Day Trend Rows */
@@ -2734,6 +2810,8 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 9px;
+  min-width: 0;
+  width: 100%;
 }
 
 .admin-trend-row {
@@ -2741,6 +2819,9 @@ textarea {
   align-items: center;
   gap: 10px;
   font-size: 0.8rem;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-trend-date {
@@ -2757,6 +2838,7 @@ textarea {
   border-radius: 4px;
   height: 9px;
   overflow: hidden;
+  min-width: 20px;
 }
 
 .admin-trend-bar-fill {
@@ -2782,11 +2864,45 @@ textarea {
   color: var(--text-muted);
 }
 
+@media (max-width: 480px) {
+  .admin-trend-date {
+    width: 66px;
+    font-size: 0.75rem;
+  }
+  .admin-trend-numbers {
+    font-size: 0.72rem;
+  }
+  .admin-trend-row {
+    gap: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .admin-trend-row {
+    flex-wrap: wrap;
+    gap: 4px 6px;
+  }
+  .admin-trend-bar-track {
+    order: 3;
+    width: 100%;
+    flex-basis: 100%;
+  }
+  .admin-trend-date {
+    width: auto;
+    flex: 1;
+  }
+  .admin-trend-numbers {
+    margin-left: auto;
+  }
+}
+
 /* Top Events Pass List */
 .admin-top-events-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
+  width: 100%;
 }
 
 .admin-top-event-row {
@@ -2798,6 +2914,9 @@ textarea {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   font-size: 0.825rem;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-event-rank-badge {
@@ -2832,6 +2951,7 @@ textarea {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .admin-top-event-views-badge {
@@ -2861,39 +2981,52 @@ textarea {
   height: 1px;
   background-color: var(--border);
   margin: 28px 0 20px;
+  width: 100%;
 }
 
 .admin-events-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-bottom: 16px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .admin-section-heading {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 3.5vw, 1.25rem);
   font-weight: 700;
   color: var(--text);
   margin: 0;
+  min-width: 0;
 }
 
 .admin-events-list {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
+/* Medium / laptop screens: 2 columns */
+@media (min-width: 701px) {
   .admin-events-list {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
   }
 }
 
-@media (min-width: 1024px) {
+/* Large desktop screens (>= 1200px): 3 columns */
+@media (min-width: 1200px) {
   .admin-events-list {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
   }
 }
 
@@ -2907,7 +3040,10 @@ textarea {
   flex-direction: column;
   gap: 14px;
   box-sizing: border-box;
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 @media (max-width: 480px) {
@@ -2921,6 +3057,7 @@ textarea {
   align-items: center;
   gap: 14px;
   min-width: 0;
+  width: 100%;
 }
 
 .admin-event-poster {
@@ -2950,6 +3087,7 @@ textarea {
   gap: 3px;
   min-width: 0;
   flex: 1;
+  overflow: hidden;
 }
 
 .admin-event-name {
@@ -2960,10 +3098,12 @@ textarea {
   margin: 0;
   line-height: 1.25;
   word-break: break-word;
+  overflow-wrap: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-width: 0;
 }
 
 .admin-event-venue-text {
@@ -2974,6 +3114,7 @@ textarea {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .admin-event-dates-count {
@@ -2981,13 +3122,22 @@ textarea {
   color: var(--brand);
   font-weight: 600;
   margin: 0;
+  min-width: 0;
 }
 
 .admin-event-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 340px) {
+  .admin-event-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .admin-btn-edit {
@@ -3007,6 +3157,8 @@ textarea {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background-color 0.15s ease, border-color 0.15s ease;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -3039,6 +3191,8 @@ textarea {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background-color 0.15s ease, border-color 0.15s ease;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -3466,6 +3620,7 @@ textarea {
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
   width: 100%;
+  min-width: 0;
   box-sizing: border-box;
 }
 
@@ -3473,6 +3628,8 @@ textarea {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-price-cols-split {
@@ -3486,6 +3643,8 @@ textarea {
   font-weight: 700 !important;
   cursor: not-allowed !important;
   border: 1px solid var(--border) !important;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-date-remove-btn {
@@ -3521,7 +3680,7 @@ textarea {
   height: 44px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .admin-date-row {
     display: flex;
     flex-direction: column;
@@ -3532,18 +3691,21 @@ textarea {
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     margin-bottom: 14px;
+    width: 100%;
+    min-width: 0;
   }
 
   .admin-price-cols-split {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
     width: 100%;
+    min-width: 0;
   }
 
-  @media (max-width: 340px) {
+  @media (max-width: 360px) {
     .admin-price-cols-split {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: 10px;
     }
   }
